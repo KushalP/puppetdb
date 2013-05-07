@@ -1,7 +1,7 @@
 (ns com.puppetlabs.test.concurrent
   (:use [com.puppetlabs.concurrent]
         [clojure.test])
-  (:require [clojure.tools.logging :as log])
+  (:require [taoensso.timbre :as log])
   (:import [java.util.concurrent Semaphore]))
 
 (defn- create-futures

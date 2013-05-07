@@ -10,7 +10,7 @@
             [clamq.protocol.consumer :as mq-consumer]
             [clamq.protocol.seqable :as mq-seq]
             [clamq.protocol.producer :as mq-producer]
-            [clojure.tools.logging :as log])
+            [taoensso.timbre :as log])
   (:use [cheshire.custom :only (JSONable)]))
 
 (defn- set-usage!*

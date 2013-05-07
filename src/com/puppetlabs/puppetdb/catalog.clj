@@ -89,7 +89,7 @@
 ;;
 (ns com.puppetlabs.puppetdb.catalog
   (:require [clojure.string :as string]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [clojure.set :as set]
             [cheshire.core :as json]
             [digest]

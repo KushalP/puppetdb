@@ -13,7 +13,7 @@
            [org.apache.log4j Level]
            [javax.naming.ldap LdapName])
   (:require [clojure.test]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [clojure.string :as string]
             [clojure.tools.cli :as cli]
             [digest]

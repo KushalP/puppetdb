@@ -4,7 +4,7 @@
   (:import (org.eclipse.jetty.server Server)
            (org.eclipse.jetty.server.nio SelectChannelConnector))
   (:require [ring.adapter.jetty :as jetty])
-  (:use [clojure.tools.logging :as log]))
+  (:use [taoensso.timbre :as log]))
 
 ;; We need to monkey-patch `add-ssl-connector!` in order to set the
 ;; appropriate options for Client Certificate Authentication, and use

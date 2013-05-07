@@ -4,7 +4,7 @@
 ;; application.
 
 (ns com.puppetlabs.puppetdb.http.server
-  (:require [clojure.tools.logging :as log])
+  (:require [taoensso.timbre :as log])
   (:use [com.puppetlabs.puppetdb.http.v1 :only (v1-app)]
         [com.puppetlabs.puppetdb.http.v2 :only (v2-app)]
         [com.puppetlabs.puppetdb.http.experimental :only (experimental-app)]

@@ -38,7 +38,7 @@
 ;;
 (ns com.puppetlabs.puppetdb.cli.benchmark
   (:import (java.io File))
-  (:require [clojure.tools.logging :as log]
+  (:require [taoensso.timbre :as log]
             [com.puppetlabs.puppetdb.catalog :as cat]
             [com.puppetlabs.puppetdb.catalog.utils :as catutils]
             [com.puppetlabs.puppetdb.command :as command]

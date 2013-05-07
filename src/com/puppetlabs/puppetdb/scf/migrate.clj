@@ -49,7 +49,7 @@
 
 (ns com.puppetlabs.puppetdb.scf.migrate
   (:require [clojure.java.jdbc :as sql]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [clojure.string :as string]
             [com.puppetlabs.utils :as utils])
   (:use [clojure.set]

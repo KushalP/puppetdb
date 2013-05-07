@@ -53,7 +53,7 @@
             [com.puppetlabs.utils :as pl-utils]
             [clojure.java.jdbc :as sql]
             [clojure.string :as string]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [cheshire.core :as json]
             [com.puppetlabs.puppetdb.http.server :as server])
   (:use [clojure.java.io :only [file]]

@@ -25,7 +25,7 @@
             [com.puppetlabs.jdbc :as jdbc]
             [clojure.java.jdbc :as sql]
             [clojure.string :as str]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [cheshire.core :as json])
   (:use [clj-time.coerce :only [to-string to-timestamp]]
         [clj-time.core :only [ago secs now]]

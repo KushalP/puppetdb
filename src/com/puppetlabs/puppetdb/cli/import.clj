@@ -5,7 +5,7 @@
 
 (ns com.puppetlabs.puppetdb.cli.import
   (:require [fs.core :as fs]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [com.puppetlabs.puppetdb.command :as command]
             [com.puppetlabs.http :as pl-http]
             [com.puppetlabs.archive :as archive]

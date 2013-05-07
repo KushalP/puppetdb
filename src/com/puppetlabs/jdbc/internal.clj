@@ -7,7 +7,7 @@
   (:use [clojure.string :only (join)])
   (:import (com.jolbox.bonecp.hooks AbstractConnectionHook))
   (:require [clojure.java.jdbc :as sql]
-            [clojure.tools.logging :as log]))
+            [taoensso.timbre :as log]))
 
 (defn query-param->str
   "Helper method for converting a single parameter from a prepared statement

@@ -5,7 +5,7 @@
            (java.util.concurrent TimeUnit))
   (:require [clojure.java.jdbc :as sql]
             [clojure.string :as string]
-            [clojure.tools.logging :as log]
+            [taoensso.timbre :as log]
             [com.puppetlabs.utils :as utils])
   (:use com.puppetlabs.jdbc.internal))
 

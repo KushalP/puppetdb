@@ -57,7 +57,7 @@
 ;;
 
 (ns com.puppetlabs.puppetdb.command
-  (:require [clojure.tools.logging :as log]
+  (:require [taoensso.timbre :as log]
             [com.puppetlabs.puppetdb.scf.storage :as scf-storage]
             [com.puppetlabs.puppetdb.catalog :as cat]
             [com.puppetlabs.puppetdb.report :as report]

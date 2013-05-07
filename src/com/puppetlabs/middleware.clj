@@ -4,7 +4,7 @@
   (:require [com.puppetlabs.utils :as utils]
             [com.puppetlabs.http :as pl-http]
             [ring.util.response :as rr]
-            [clojure.tools.logging :as log])
+            [taoensso.timbre :as log])
   (:use [metrics.timers :only (timer time!)]
         [metrics.meters :only (meter mark!)]))
 
