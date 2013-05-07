@@ -44,6 +44,7 @@
                  ;; Nicer exception handling with try+/throw+
                  [slingshot "0.10.3"]
                  [digest "1.3.0"]
+                 [com.taoensso/timbre "1.6.0"]
                  [log4j "1.2.16" :exclusions [javax.mail/mail
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
