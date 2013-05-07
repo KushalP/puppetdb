@@ -67,7 +67,8 @@
                  [org.apache.commons/commons-compress "1.4.1"]]
 
   :profiles {:dev {:resource-paths ["test-resources"],
-                   :dependencies [[ring-mock "0.1.1"]]}}
+                   :dependencies [[ring-mock "0.1.1"]
+                                  [org.clojars.runa/conjure "2.1.3"]]}}
 
   :jar-exclusions [#"leiningen/"]
 
