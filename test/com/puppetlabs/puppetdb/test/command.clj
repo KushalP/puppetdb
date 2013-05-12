@@ -13,6 +13,7 @@
         [com.puppetlabs.puppetdb.examples]
         [com.puppetlabs.testutils.logging]
         [com.puppetlabs.puppetdb.testutils.report :only [munge-example-report-for-storage]]
+        [com.puppetlabs.testutils.logging]
         [clj-time.coerce :only [to-timestamp]]
         [clojure.test]
         [slingshot.slingshot :only [try+ throw+]]))
@@ -290,21 +291,17 @@
       (testing "should log errors"
         (let [make-cmd (fn [n] {:command nil :version nil :annotations {:attempts (repeat n {})}})
               publish  (call-counter)]
+          (testing "to DEBUG for initial retries"
+            (let [log-output (atom [])]
+              (atom-logger log-output)
+              (handle-command-retry (make-cmd 1) nil publish)
+              (is (= (get-in @log-output [0 1]) :debug))))
 
-          (comment
-            (testing "to DEBUG for initial retries"
-              (let [log-output (atom [])]
-                (binding [*logger-factory* (atom-logger log-output)]
-                  (handle-command-retry (make-cmd 1) nil publish))
-
-                (is (= (get-in @log-output [0 1]) :debug))))
-
-            (testing "to ERROR for later retries"
-              (let [log-output (atom [])]
-                (binding [*logger-factory* (atom-logger log-output)]
-                  (handle-command-retry (make-cmd maximum-allowable-retries) nil publish))
-
-                (is (= (get-in @log-output [0 1]) :error))))))))))
+          (testing "to ERROR for later retries"
+            (let [log-output (atom [])]
+              (atom-logger log-output)
+              (handle-command-retry (make-cmd maximum-allowable-retries) nil publish)
+              (is (= (get-in @log-output [0 1]) :error)))))))))
 
 ;; The two different versions of replace-catalog have exactly the same
 ;; behavior, except different inputs.
