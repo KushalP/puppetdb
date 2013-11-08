@@ -602,6 +602,40 @@
     "ALTER TABLE edges
       ADD CONSTRAINT edges_certname_source_target_type_unique_key UNIQUE (certname, source, target, type)"))
 
+(defn historical-fact-storage
+  "Store facts historically in PuppetDB instead of replacing them on each run.
+   As a final step this also removes certname_facts and certname_facts_metadata
+   tables once the migration of data is completed."
+  []
+  ;; Using a BIGSERIAL here as failures on INSERT (due to collisions
+  ;; on UNIQUE-ness will lead to a increment on the transient table
+  ;; that will be created called `facts_fact_id_seq`.
+  (sql/create-table :facts
+                    ["fact_id" "BIGSERIAL" "UNIQUE" "NOT NULL" "PRIMARY KEY"]
+                    ["name" "TEXT" "NOT NULL"]
+                    ["value" "TEXT" "NOT NULL"]
+                    ["UNIQUE (name, value)"])
+  (sql/do-commands
+   "CREATE INDEX idx_facts_name_value ON facts (name, value)")
+
+  (sql/create-table :facts_metadata
+                    ["certname" "TEXT" "REFERENCES certnames(name)"]
+                    ["fact_id" "bigint" "REFERENCES facts(fact_id)"]
+                    ["timestamp" "TIMESTAMP WITH TIME ZONE"]
+                    ["PRIMARY KEY (certname, fact_id, timestamp)"]
+                    ["UNIQUE (certname, fact_id, timestamp)"])
+  (sql/do-commands
+   "CREATE INDEX idx_facts_metadata_certname ON facts_metadata (certname)"
+   "CREATE INDEX idx_facts_metadata_fact_id ON facts_metadata (fact_id)"
+   "CREATE INDEX idx_facts_metadata_timestamp ON facts_metadata (timestamp)")
+
+  (sql/do-commands
+   "INSERT INTO facts (name, value) SELECT name, value FROM certname_facts"
+   "INSERT INTO facts_metadata (certname, fact_id, timestamp)
+      SELECT cfacts.certname, facts.fact_id, meta.timestamp FROM certname_facts AS cfacts
+        INNER JOIN facts ON facts.name = cfacts.name
+        INNER JOIN certname_facts_metadata AS meta ON cfacts.certname = meta.certname"))
+
 ;; The available migrations, as a map from migration version to migration function.
 (def migrations
   {1 initialize-store
@@ -622,7 +656,8 @@
    16 drop-resource-tags-index
    17 use-bigint-instead-of-catalog-hash
    18 add-index-on-exported-column
-   19 differential-edges})
+   19 differential-edges
+   20 historical-fact-storage})
 
 (def desired-schema-version (apply max (keys migrations)))
 
