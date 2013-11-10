@@ -611,18 +611,20 @@
   ;; on UNIQUE-ness will lead to a increment on the transient table
   ;; that will be created called `facts_fact_id_seq`.
   (sql/create-table :facts
-                    ["fact_id" "BIGSERIAL" "UNIQUE" "NOT NULL" "PRIMARY KEY"]
+                    ["fact_id" "BIGSERIAL" "NOT NULL" "PRIMARY KEY"]
                     ["name" "TEXT" "NOT NULL"]
                     ["value" "TEXT" "NOT NULL"]
                     ["UNIQUE (name, value)"])
   (sql/do-commands
    "CREATE INDEX idx_facts_name_value ON facts (name, value)")
+  (when (postgres?)
+    (sql/do-commands
+     "ALTER TABLE facts ADD CONSTRAINT facts_pkey PRIMARY KEY (fact_id)"))
 
   (sql/create-table :facts_metadata
                     ["certname" "TEXT" "REFERENCES certnames(name)"]
                     ["fact_id" "bigint" "REFERENCES facts(fact_id)"]
                     ["timestamp" "TIMESTAMP WITH TIME ZONE"]
-                    ["PRIMARY KEY (certname, fact_id, timestamp)"]
                     ["UNIQUE (certname, fact_id, timestamp)"])
   (sql/do-commands
    "CREATE INDEX idx_facts_metadata_certname ON facts_metadata (certname)"
