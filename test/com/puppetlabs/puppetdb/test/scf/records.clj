@@ -32,4 +32,27 @@
                  [{:name      "kernel"
                    :value     "Linux"
                    :timestamp time
-                   :certname  certname}])))))))
+                   :certname  certname}]))))
+      (testing "will re-use facts that are already in the database"
+        (let [name       "architecture"
+              value      "i386"
+              cert-alpha "alpha.certname"
+              cert-beta  "beta.certname"
+              fact-alpha (Fact. name value time cert-alpha)
+              fact-beta  (Fact. name value time cert-beta)]
+          (add-certname! cert-alpha)
+          (add-certname! cert-beta)
+          (save! fact-alpha)
+          (save! fact-beta)
+          (let [fact-ids (query-to-vec [(str "SELECT f.fact_id "
+                                             "FROM facts AS f "
+                                             "INNER JOIN facts_metadata AS m "
+                                             "ON f.fact_id = m.fact_id "
+                                             "WHERE f.name = ? "
+                                             "AND f.value = ?")
+                                        name value])]
+            (is (= 1
+                   (->> fact-ids
+                        (map :fact_id)
+                        set
+                        count)))))))))
