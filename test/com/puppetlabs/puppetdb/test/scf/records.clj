@@ -21,38 +21,39 @@
              :value     "Linux"
              :timestamp time
              :certname  certname)))
-    (testing "protocols"
-      (testing "can successfully save a fact to the database"
-        (let [fact (Fact. "kernel" "Linux" time certname)]
-          (save! fact)
-          (is (= (query-to-vec (str "SELECT f.name, f.value, m.certname, m.timestamp "
-                                    "FROM facts AS f "
-                                    "INNER JOIN facts_metadata AS m "
-                                    "ON f.fact_id = m.fact_id"))
-                 [{:name      "kernel"
-                   :value     "Linux"
-                   :timestamp time
-                   :certname  certname}]))))
-      (testing "will re-use facts that are already in the database"
-        (let [name       "architecture"
-              value      "i386"
-              cert-alpha "alpha.certname"
-              cert-beta  "beta.certname"
-              fact-alpha (Fact. name value time cert-alpha)
-              fact-beta  (Fact. name value time cert-beta)]
-          (add-certname! cert-alpha)
-          (add-certname! cert-beta)
-          (save! fact-alpha)
-          (save! fact-beta)
-          (let [fact-ids (query-to-vec [(str "SELECT f.fact_id "
-                                             "FROM facts AS f "
-                                             "INNER JOIN facts_metadata AS m "
-                                             "ON f.fact_id = m.fact_id "
-                                             "WHERE f.name = ? "
-                                             "AND f.value = ?")
-                                        name value])]
-            (is (= 1
-                   (->> fact-ids
-                        (map :fact_id)
-                        set
-                        count)))))))))
+    (testing "Commandable protocols"
+      (testing "save!"
+        (testing "can successfully save a fact to the database"
+          (let [fact (Fact. "kernel" "Linux" time certname)]
+            (save! fact)
+            (is (= (query-to-vec (str "SELECT f.name, f.value, m.certname, m.timestamp "
+                                      "FROM facts AS f "
+                                      "INNER JOIN facts_metadata AS m "
+                                      "ON f.fact_id = m.fact_id"))
+                   [{:name      "kernel"
+                     :value     "Linux"
+                     :timestamp time
+                     :certname  certname}]))))
+        (testing "will re-use facts that are already in the database"
+          (let [name       "architecture"
+                value      "i386"
+                cert-alpha "alpha.certname"
+                cert-beta  "beta.certname"
+                fact-alpha (Fact. name value time cert-alpha)
+                fact-beta  (Fact. name value time cert-beta)]
+            (add-certname! cert-alpha)
+            (add-certname! cert-beta)
+            (save! fact-alpha)
+            (save! fact-beta)
+            (let [fact-ids (query-to-vec [(str "SELECT f.fact_id "
+                                               "FROM facts AS f "
+                                               "INNER JOIN facts_metadata AS m "
+                                               "ON f.fact_id = m.fact_id "
+                                               "WHERE f.name = ? "
+                                               "AND f.value = ?")
+                                          name value])]
+              (is (= 1
+                     (->> fact-ids
+                          (map :fact_id)
+                          set
+                          count))))))))))
